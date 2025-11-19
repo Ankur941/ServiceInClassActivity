@@ -102,6 +102,12 @@ class MainActivity : AppCompatActivity() {
         if (isConnected) {
             timerBinder.stop()
             isRunning = false
+
+            //unbind the service
+            unbindService(serviceConnection)
+            isConnected = false
+            bindService(Intent(this, TimerService::class.java), serviceConnection, BIND_AUTO_CREATE)
+
             updateMenuState()
             timerTextView.text = "0"
         }
@@ -140,7 +146,7 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onDestroy() {
-        if(isRunning){
+        if(isConnected){
             unbindService(serviceConnection)
             isConnected = false
         }
